@@ -12,6 +12,17 @@ def create_app():
     """創建並配置 Flask 應用程式"""
     app = Flask(__name__)
 
+    app.config.from_mapping(
+        SECRET_KEY=os.getenv("SECRET_KEY", "dev-secret-key"),
+        DB_CONFIG={
+            "host": os.getenv("DB_HOST", "127.0.0.1"),
+            "port": int(os.getenv("DB_PORT", 3306)),
+            "user": os.getenv("DB_USER", "root"),
+            "password": os.getenv("DB_PASSWORD", ""),
+            "database": os.getenv("DB_NAME", "app_db"),
+        },
+    )
+
     # 載入所有模組
     register_blueprints(app)
 

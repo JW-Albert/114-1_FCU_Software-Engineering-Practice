@@ -85,7 +85,7 @@ modules/
 ```python
 from flask import Blueprint
 
-user_bp = Blueprint('user', __name__, url_prefix='/user')
+user_bp = Blueprint('user', __name__, url_prefix='/auth')
 
 from . import routes
 ```
@@ -93,18 +93,27 @@ from . import routes
 ### 3. `modules/user/routes.py`
 
 ```python
-from flask import render_template, jsonify
+from flask import render_template, request, flash, redirect, url_for
+from services.db import authenticate_user, DatabaseError
 from . import user_bp
 
 
-@user_bp.route('/profile')
-def profile():
-    return render_template('user/profile.html')
+@user_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        try:
+            user = authenticate_user(username, password)
+        except DatabaseError as exc:
+            flash(str(exc), 'danger')
+        else:
+            if user:
+                flash('登入成功', 'success')
+                return redirect(url_for('home.index'))
+            flash('帳號或密碼錯誤', 'danger')
 
-
-@user_bp.route('/api/info')
-def api_info():
-    return jsonify({'username': 'example'})
+    return render_template('user/login.html')
 ```
 
 ### 4. 模板（可選）
@@ -112,7 +121,7 @@ def api_info():
 ```
 templates/
 └── user/
-    └── profile.html
+    └── login.html
 ```
 
 ## 注意事項

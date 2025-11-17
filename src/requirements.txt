@@ -1,2 +1,3 @@
 # Flask to build the web application
 Flask >= 3.0.0
+mariadb >= 1.1.14
