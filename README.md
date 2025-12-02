@@ -10,14 +10,17 @@ Flask 模組化網頁應用程式專案
 │   ├── .env             # 環境變數檔案（不提交到版本控制）
 │   └── .env.example    # 環境變數範例檔案
 ├── docs/                # 文件資料夾
-│   └── Database_Schema.md # 資料庫結構文件
+│   ├── Database_Schema.md # 資料庫結構文件
+│   └── Models_Implementation.md # 資料模型實作文件
 ├── src/
 │   ├── app.py           # 主應用程式（自動載入所有模組）
 │   ├── modules/         # 模組資料夾（每個開發者的模組放在這裡）
 │   │   ├── home/       # 範例模組：首頁與靜態頁面
 │   │   ├── user/       # 使用者登入模組（Blueprint: user_bp）
 │   │   └── README.md   # 模組開發指南
-│   ├── services/       # 共用服務（例如資料庫連線）
+│   ├── models/        # 資料模型（User, Restaurant, MenuItem 等）
+│   ├── services/       # 共用服務（例如資料庫連線、搜尋、推薦）
+│   ├── data/          # 範例資料
 │   ├── templates/      # HTML 模板資料夾
 │   │   ├── home/       # 各模組的模板（建議按模組分資料夾）
 │   │   └── user/
