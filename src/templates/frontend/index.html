@@ -14,6 +14,7 @@
             --gray-bg: #E9E9E9;
             --white: #FFFFFF;
             --text-dark: #333;
+            --border-light: #ccc;
             /* 字體使用預設 */
             --font-serif: Georgia, 'Times New Roman', Times, serif; /* for logo */
             --font-sans: Arial, Helvetica, sans-serif; /* for body */
@@ -71,7 +72,9 @@
             justify-content: flex-end; /* 讓連結靠右對齊 (置右) */
             gap: 150px; /* 連結彼此之間的間距 */
             height: 100%;
-            padding: 0 50px; /* 新增內邊距，將連結與 User Icon 分開，並讓連結整體偏左一點 */
+            padding: 0; 
+            /* 新增：右邊距，將連結與人物圖標分開 */
+            margin-right: 40px; 
         }
         
         .nav-item {
@@ -339,39 +342,119 @@
         .map-placeholder { width: 100%; height: 300px; background-color: #f0f0f0; border: 1px solid #ccc; }
 
 
-        /* --- 我的飲食頁 (Frame 3/5) 樣式 --- */
+        /* --- 我的飲食頁 (Frame 3/5) 樣式 - 新版佈局 --- */
 
-        .diet-layout { display: flex; gap: 40px; }
-        .diet-main-content { flex-grow: 1; }
-        .diet-sidebar { width: 300px; }
+        /* 上半部：日曆 + 按鈕 (水平排列) */
+        .diet-top-section {
+            display: flex;
+            gap: 40px;
+            /* 修改：設定為 stretch，讓兩邊等高 */
+            align-items: stretch; 
+            margin-bottom: 20px;
+        }
+        
+        /* 側邊日曆寬度 */
+        .diet-sidebar { width: 260px; flex-shrink: 0; } 
+        
+        /* 右側餐次按鈕容器：填滿剩餘空間 */
+        .meal-buttons-container {
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            /* 移除這裡的 gap，改由內部的 justify-content 控制 */
+        }
+        
+        /* 下半部：輸入表單 + 統計 (垂直排列，佔滿全寬) */
+        .diet-bottom-section {
+            width: 100%;
+            margin-top: 20px;
+        }
 
-        /* 日曆 */
-        .calendar-widget { margin-bottom: 40px; border: 1px solid var(--gray-bg); padding: 15px; text-align: center; }
+        /* 日曆 - 移除 margin-bottom 以確保高度計算準確 */
+        .calendar-widget { margin-bottom: 0; border: 1px solid var(--gray-bg); padding: 15px; text-align: center; height: 100%; }
         .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: bold; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-size: 0.9em; }
-        .cal-day { padding: 8px 0; border-radius: 50%; cursor: pointer; }
+        .cal-day { 
+            padding: 8px 0; 
+            border-radius: 50%; 
+            cursor: pointer;
+            transition: background-color 0.1s;
+            width: 30px; 
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        }
+        .cal-day:hover {
+            background-color: var(--gray-bg);
+        }
         .cal-weekday { font-weight: bold; color: #999; }
-        .cal-day.selected { background-color: var(--primary-blue); color: var(--white); font-weight: bold; }
+        .cal-day.selected { 
+            background-color: var(--primary-blue); 
+            color: var(--white); 
+            font-weight: bold; 
+        }
         .cal-day.not-in-month { color: #ccc; }
 
-        /* 餐次輸入區 */
-        .meal-input-section { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+        /* 餐次輸入區 - 修改：使用 space-between 讓按鈕平均分佈在日曆的高度內 */
+        .meal-input-section { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; /* 關鍵：平均分佈垂直空間 */
+            height: 100%; /* 填滿容器高度 */
+            gap: 10px; /* 最小間距，避免太擠 */
+            margin-bottom: 0; 
+        } 
+        
         .meal-card-btn {
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr; /* 左(彈性) 中(自適應) 右(彈性) */
             align-items: center;
-            padding: 15px 20px;
-            border: 1px solid var(--primary-blue);
+            
+            /* 修改：加大按鈕高度/內邊距 */
+            padding: 20px 25px; 
+            
             background-color: var(--white);
             cursor: pointer;
             font-size: 1.1em;
             font-weight: bold;
             color: var(--primary-blue);
+            border: 3px solid transparent; 
+            transition: border-color 0.15s;
+            border-radius: 16px; 
         }
-        .meal-card-btn span:last-child { color: #666; font-weight: normal; font-size: 0.9em;}
-        .meal-card-btn i { font-size: 1.2em; }
+        .meal-card-btn:not(.selected) {
+            border-color: var(--border-light);
+            border-width: 2px; 
+        }
+        .meal-card-btn.selected {
+            border-color: var(--primary-blue); 
+            border-width: 3px; 
+        }
+        
+        .meal-card-btn span:first-child { 
+            justify-self: start;
+            font-size: 1.25em; 
+        }
+        .meal-card-btn span:nth-child(2) { 
+            justify-self: center;
+            color: var(--text-dark); 
+            font-size: 0.9em; 
+            font-weight: normal;
+        }
+        .meal-card-btn i { 
+            justify-self: end;
+            font-size: 1.2em; 
+        }
+
 
         /* 營養素總覽 */
         .nutrient-summary h3 { margin-bottom: 15px; font-size: 1em; color: var(--primary-blue); }
+        #total-summary { display: block; } 
+        #meal-detail-container { display: none; }
+
+
         .nutrient-pills { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 15px; }
         .pill-label { background-color: var(--primary-blue); color: var(--white); padding: 5px 10px; border-radius: 20px; font-size: 0.9em; text-align: center; }
         .summary-values {
@@ -404,29 +487,46 @@
         .entry-nutrient p:first-child { font-weight: bold; }
         .entry-nutrient p:last-child { font-size: 0.8em; color: #666; }
 
-        /* 飲食輸入表單 (Frame 5) */
+        /* 飲食輸入表單 (Frame 5) - 全寬版配置 */
+        .diet-input-form {
+            border: 1px solid var(--gray-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+
         .diet-input-form .nutrient-pills {
+            /* 2fr 給食物名稱，其餘 6 欄各 1fr */
+            display: grid;
             grid-template-columns: 2fr repeat(6, 1fr); 
+            gap: 10px; 
+            margin-bottom: 10px;
         }
         .diet-input-form .nutrient-pills .pill-label:first-child {
-            text-align: left; 
-            padding-left: 10px;
+            text-align: center; 
+            padding-left: 0;
+        }
+        .pill-label {
+             font-size: 0.95em;
         }
 
         .input-row {
             display: grid;
-            grid-template-columns: 2fr repeat(6, 1fr); 
+            grid-template-columns: 2fr repeat(6, 1fr); /* 與標題對齊 */
             gap: 10px;
             margin-bottom: 20px;
         }
         .input-row input {
-            padding: 8px 10px;
+            padding: 10px 5px; 
             border: 1px solid #ccc;
             font-size: 1em;
             text-align: center;
+            width: 100%; 
+            min-width: 0; 
+            border-radius: 4px;
         }
         .input-row input:first-child {
-            text-align: left;
+            text-align: center;
         }
 
         .action-buttons {
@@ -595,58 +695,90 @@
         <!-- 3. 我的飲食頁 (Frame 3 & 5) -->
         <!-- ======================================================= -->
         <section class="page-section" id="diet-page">
-            <div class="diet-layout">
+            
+            <!-- 上半部：日曆與餐次按鈕 (並排) -->
+            <div class="diet-top-section">
+                <!-- 左側：日曆 -->
                 <div class="diet-sidebar">
                     <div class="calendar-widget">
-                        <!-- 日曆內容略 -->
+                        <!-- 月曆抬頭 -->
                         <div class="cal-header">
-                            <i class="fa-solid fa-chevron-left"></i>
-                            <span>Sep 2025</span>
-                            <i class="fa-solid fa-chevron-right"></i>
+                            <i class="fa-solid fa-chevron-left" id="prev-month"></i>
+                            <span id="current-month-year">Sep 2025</span>
+                            <i class="fa-solid fa-chevron-right" id="next-month"></i>
                         </div>
-                        <div class="cal-grid">
-                            <span class="cal-weekday">Su</span><span class="cal-weekday">Mo</span><span class="cal-weekday">Tu</span><span class="cal-weekday">We</span><span class="cal-weekday">Th</span><span class="cal-weekday">Fr</span><span class="cal-weekday">Sa</span>
-                            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
-                            <span>8</span><span class="cal-day selected">9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
-                            <span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span>
+                        <!-- 月曆網格 (將由 JS 填充) -->
+                        <div class="cal-grid" id="calendar-grid">
+                            <!-- 星期幾標籤 -->
+                            <span class="cal-weekday">Su</span>
+                            <span class="cal-weekday">Mo</span>
+                            <span class="cal-weekday">Tu</span>
+                            <span class="cal-weekday">We</span>
+                            <span class="cal-weekday">Th</span>
+                            <span class="cal-weekday">Fr</span>
+                            <span class="cal-weekday">Sa</span>
+                            <!-- 日期將由 JS 填充 -->
                         </div>
                     </div>
                 </div>
 
-                <div class="diet-main-content">
-                    <!-- 餐次輸入區 -->
+                <!-- 右側：餐次輸入按鈕 -->
+                <div class="meal-buttons-container">
                     <div class="meal-input-section">
-                        <button class="meal-card-btn" data-meal="lunch" onclick="toggleForm('diet-form')">
-                            <span>午餐</span>
-                            <span>已攝取：約 530 大卡</span>
+                        <button class="meal-card-btn" data-meal="breakfast" data-meal-id="1">
+                            <span>早餐</span>
+                            <span class="meal-cal-summary">已攝取：約 0 大卡</span>
                             <i class="fa-solid fa-plus"></i>
                         </button>
-                        <button class="meal-card-btn" data-meal="dinner"><span>晚餐</span><span>已攝取：約 0 大卡</span><i class="fa-solid fa-plus"></i></button>
+                        <button class="meal-card-btn" data-meal="lunch" data-meal-id="2">
+                            <span>午餐</span>
+                            <span class="meal-cal-summary">已攝取：約 0 大卡</span>
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button class="meal-card-btn" data-meal="dinner" data-meal-id="3">
+                            <span>晚餐</span>
+                            <span class="meal-cal-summary">已攝取：約 0 大卡</span>
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                        <button class="meal-card-btn" data-meal="other" data-meal-id="4">
+                            <span>其他</span>
+                            <span class="meal-cal-summary">已攝取：約 0 大卡</span>
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
                     </div>
+                </div>
+            </div>
 
-                    <!-- 飲食輸入表單 (Frame 5) - 預設隱藏，點擊餐次卡片後顯示/隱藏 -->
-                    <section class="diet-input-form" id="diet-form" style="display: none; margin-bottom: 40px;">
-                        <div class="nutrient-pills">
-                            <span class="pill-label">食物</span>
-                            <span class="pill-label">熱量</span><span class="pill-label">碳水化合物</span>
-                            <span class="pill-label">蛋白質</span><span class="pill-label">脂肪</span>
-                            <span class="pill-label">糖</span><span class="pill-label">鈉</span>
-                        </div>
-                        <div class="input-row">
-                            <input type="text" placeholder="食物名稱">
-                            <input type="number" placeholder=""><input type="number" placeholder="">
-                            <input type="number" placeholder=""><input type="number" placeholder="">
-                            <input type="number" placeholder=""><input type="number" placeholder="">
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary"><i class="fa-solid fa-camera"></i> 上傳圖片</button>
-                            <div class="spacer"></div>
-                            <button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> 刪除</button>
-                            <button class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存</button>
-                        </div>
-                    </section>
-                    
-                    <!-- 營養素總覽 (Frame 3) -->
+            <!-- 下半部：輸入表單與統計 (全寬，位於上方區塊之下) -->
+            <div class="diet-bottom-section">
+                <!-- 飲食輸入表單 (Frame 5) - 預設隱藏，點擊餐次卡片後顯示/隱藏 -->
+                <section class="diet-input-form" id="diet-form" style="display: none;">
+                    <div class="nutrient-pills">
+                        <span class="pill-label">食物名稱</span>
+                        <span class="pill-label">熱量</span><span class="pill-label">碳水化合物</span>
+                        <span class="pill-label">蛋白質</span><span class="pill-label">脂肪</span>
+                        <span class="pill-label">糖</span><span class="pill-label">鈉</span>
+                    </div>
+                    <div class="input-row">
+                        <!-- 為輸入欄位添加 ID 以便 JS 讀取 -->
+                        <input type="text" id="food-name" placeholder="食物名稱">
+                        <input type="number" id="food-cals" placeholder="">
+                        <input type="number" id="food-carbs" placeholder="">
+                        <input type="number" id="food-protein" placeholder="">
+                        <input type="number" id="food-fat" placeholder="">
+                        <input type="number" id="food-sugar" placeholder="">
+                        <input type="number" id="food-sodium" placeholder="">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary"><i class="fa-solid fa-camera"></i> 上傳圖片</button>
+                        <div class="spacer"></div>
+                        <button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> 刪除</button>
+                        <button class="btn btn-primary" id="save-diet-btn"><i class="fa-solid fa-floppy-disk"></i> 儲存</button>
+                    </div>
+                </section>
+                
+                <!-- 總體摘要 (預設顯示) -->
+                <div id="total-summary">
                     <section class="nutrient-summary">
                         <h3 class="price-title">今日累積攝取</h3>
                         <div class="nutrient-pills">
@@ -654,28 +786,35 @@
                             <span class="pill-label">蛋白質</span><span class="pill-label">脂肪</span>
                             <span class="pill-label">糖</span><span class="pill-label">鈉</span>
                         </div>
-                        <div class="summary-values">
-                            <div class="summary-value"><p>930</p><p>大卡</p></div>
-                            <div class="summary-value"><p>130</p><p>公克</p></div>
-                            <div class="summary-value"><p>31</p><p>公克</p></div>
-                            <div class="summary-value"><p>25</p><p>公克</p></div>
-                            <div class="summary-value"><p>50</p><p>公克</p></div>
-                            <div class="summary-value"><p>1020</p><p>毫克</p></div>
+                        <div class="summary-values" id="total-summary-values">
+                            <!-- 預設為 0 -->
+                            <div class="summary-value"><p>0</p><p>大卡</p></div>
+                            <div class="summary-value"><p>0</p><p>公克</p></div>
+                            <div class="summary-value"><p>0</p><p>公克</p></div>
+                            <div class="summary-value"><p>0</p><p>公克</p></div>
+                            <div class="summary-value"><p>0</p><p>公克</p></div>
+                            <div class="summary-value"><p>0</p><p>毫克</p></div>
                         </div>
                     </section>
-                    <!-- 飲食細節列表 -->
-                    <section class="food-entry-list">
-                        <div class="food-entry">
-                            <div class="entry-title">便當</div>
-                            <div class="entry-nutrients">
-                                <div class="entry-nutrient"><p>374</p><p>大卡</p></div>
-                                <div class="entry-nutrient"><p>51</p><p>公克</p></div>
-                                <div class="entry-nutrient"><p>18</p><p>公克</p></div>
-                                <div class="entry-nutrient"><p>10</p><p>公克</p></div>
-                                <div class="entry-nutrient"><p>4</p><p>公克</p></div>
-                                <div class="entry-nutrient"><p>577</p><p>毫克</p></div>
-                            </div>
+                </div>
+
+                <!-- 單餐細節 (預設隱藏) -->
+                <div id="meal-detail-container">
+                    <section class="nutrient-summary">
+                        <h3 class="price-title" id="meal-summary-title">午餐攝取量</h3>
+                        <div class="nutrient-pills">
+                            <span class="pill-label">熱量</span><span class="pill-label">碳水化合物</span>
+                            <span class="pill-label">蛋白質</span><span class="pill-label">脂肪</span>
+                            <span class="pill-label">糖</span><span class="pill-label">鈉</span>
                         </div>
+                        <div class="summary-values" id="meal-summary-values">
+                            <!-- 該餐的總攝取數據將由 JS 填充 -->
+                        </div>
+                    </section>
+
+                    <!-- 飲食細節列表 (單餐) -->
+                    <section class="food-entry-list" id="meal-food-list">
+                        <!-- 單餐飲食條目將由 JS 填充 -->
                     </section>
                 </div>
             </div>
@@ -707,16 +846,22 @@
     <script>
         // 模擬的店家資料 (已更新 descriptions)
         const storeData = [
-            { id: 1, name: '九湯屋日式拉麵 逢甲店', rating: '★★★★☆ 4.0', priceRange: '$ 1 ~ 200', priceMeta: '$', distance: '0.8 km', heroImg: 'placeholder-store-1.jpg', description: '九湯屋日式拉麵 逢甲店', address: '臺中市西屯區某條巷子1號', menu: [{name: '豚骨拉麵', price: '$150'}, {name: '味噌拉麵', price: '$140'}, {name: '地獄拉麵', price: '$160'}] },
-            { id: 2, name: '泰壽司-西屯熱門美食', rating: '★★★★☆ 4.5', priceRange: '$ 200 ~ 400', priceMeta: '$$', distance: '1.1 km', heroImg: 'placeholder-store-4.jpg', description: '泰壽司-西屯熱門美食 | 烏龍麵 | 握壽司 | 好吃的湯 | 平價日料 | 台中美食 | 日本料理 | 台中美食地圖 | restaurants | Seafood | Cheap eats', address: '407792臺中市西屯區文華路138巷5號', menu: [{name: '鮭魚丼飯', price: '$275'}, {name: '綜合刺身', price: '$350'}, {name: '炸蝦天婦羅', price: '$180'}] },
-            { id: 3, name: '麥當勞-台中河南店', rating: '★★★★★ 4.8', priceRange: '$ 1 ~ 200', priceMeta: '$', distance: '1.0 km', heroImg: 'placeholder-store-2.jpg', description: '麥當勞-台中河南店', address: '臺中市西屯區河南路二段XX號', menu: [{name: '大麥克套餐', price: '$159'}, {name: '麥克雞塊', price: '$100'}, {name: '冰炫風', price: '$65'}] },
-            { id: 4, name: '力軒屋', rating: '★★★★☆ 4.2', priceRange: '$ 1 ~ 200', priceMeta: '$', distance: '0.8 km', heroImg: 'placeholder-store-3.jpg', description: '力軒屋', address: '臺中市西屯區福星路某巷10號', menu: [{name: '滷肉飯', price: '$50'}, {name: '排骨便當', price: '$90'}, {name: '麻油雞湯', price: '$130'}] },
+            { id: 1, name: '九湯屋日式拉麵 逢甲店', rating: '★★★★☆ 4.0', priceRange: '$ 1 ~ 200', priceMeta: '$', distance: '0.8 km', heroImg: 'placeholder-store-1.jpg', description: '九湯屋日式拉麵 逢甲店', menu: [{name: '豚骨拉麵', price: '$150'}, {name: '味噌拉麵', price: '$140'}] },
+            { id: 2, name: '泰壽司-西屯熱門美食', rating: '★★★★☆ 4.5', priceRange: '$ 200 ~ 400', priceMeta: '$$', distance: '1.1 km', heroImg: 'placeholder-store-4.jpg', description: '泰壽司-西屯熱門美食 | 烏龍麵 | 握壽司 | 好吃的湯 | 平價日料 | 台中美食 | 日本料理 | 台中美食地圖 | restaurants | Seafood | Cheap eats', menu: [{name: '鮭魚丼飯', price: '$275'}, {name: '綜合刺身', price: '$350'}] },
+            { id: 3, name: '麥當勞-台中河南店', rating: '★★★★★ 4.8', priceRange: '$ 1 ~ 200', priceMeta: '$', distance: '1.0 km', heroImg: 'placeholder-store-2.jpg', description: '麥當勞-台中河南店', menu: [{name: '大麥克套餐', price: '$159'}, {name: '麥克雞塊', price: '$100'}] },
+            { id: 4, name: '力軒屋', rating: '★★★★☆ 4.2', priceRange: '$ 1 ~ 200', priceMeta: '$', distance: '0.8 km', heroImg: 'placeholder-store-3.jpg', description: '力軒屋', menu: [{name: '滷肉飯', price: '$50'}, {name: '排骨便當', price: '$90'}] },
         ];
+        
+        // --- 修正：初始化為空陣列 ---
+        let dailyDietData = []; 
 
         // 收藏狀態變數 (儲存 ID)
         let favorites = []; 
-        // 追蹤當前正在瀏覽的店家 ID
         let currentStoreId = null; 
+        
+        // 月曆狀態
+        let currentMonth = new Date(); 
+        let selectedDate = currentMonth.getDate(); 
 
 
         // 頁面切換邏輯
@@ -729,59 +874,323 @@
             const vegetarianToggle = document.getElementById('vegetarian-toggle');
             const resetFiltersButton = document.getElementById('reset-filters');
             const storeListContainer = document.getElementById('store-list-container');
+            
+            // 我的飲食頁面元素
+            const monthYearDisplay = document.getElementById('current-month-year');
+            const calendarGrid = document.getElementById('calendar-grid');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const mealButtons = document.querySelectorAll('.meal-card-btn');
+            const mealDetailContainer = document.getElementById('meal-detail-container');
+            const totalSummaryContainer = document.getElementById('total-summary');
+            const mealSummaryTitle = document.getElementById('meal-summary-title');
+            const mealSummaryValues = document.getElementById('meal-summary-values');
+            const mealFoodList = document.getElementById('meal-food-list');
+            const totalSummaryValues = document.getElementById('total-summary-values');
+            const saveDietBtn = document.getElementById('save-diet-btn');
+            
+            // 輸入框元素
+            const inputName = document.getElementById('food-name');
+            const inputCals = document.getElementById('food-cals');
+            const inputCarbs = document.getElementById('food-carbs');
+            const inputProtein = document.getElementById('food-protein');
+            const inputFat = document.getElementById('food-fat');
+            const inputSugar = document.getElementById('food-sugar');
+            const inputSodium = document.getElementById('food-sodium');
 
 
-            // 預設頁面設定
-            setActivePage('search-page', 'nav-search');
-            renderStoreList(storeData); // 初次載入店家列表
+            // --- 輔助函式定義 ---
 
             function setActivePage(targetId, navId, storeId = null) {
-                // 隱藏所有頁面
                 pageSections.forEach(section => section.classList.remove('active'));
-                // 顯示目標頁面
                 const targetSection = document.getElementById(targetId);
                 if (targetSection) targetSection.classList.add('active');
 
-                // 更新導覽列選中狀態
                 navLinks.forEach(link => link.classList.remove('selected'));
                 const navElement = document.getElementById(navId);
                 if (navElement) navElement.classList.add('selected');
 
-                // 特殊頁面渲染邏輯
                 if (targetId === 'store-detail-page' && storeId !== null) {
                     const store = storeData.find(s => s.id === storeId);
                     if (store) {
-                        currentStoreId = storeId; // 更新當前店家 ID
+                        currentStoreId = storeId; 
                         renderStoreDetail(store);
                     }
+                } else if (targetId === 'diet-page') {
+                    renderCalendar(currentMonth);
+                    resetMealView();
                 } else if (targetId === 'favorite-page') {
-                    renderFavorites(); // 渲染收藏列表
+                    renderFavorites(); 
                 }
             }
             
-            // --- 重置按鈕功能 ---
             function resetAllFilters() {
-                // 1. 重置類別按鈕
                 categoryButtons.forEach(button => {
                     button.classList.remove('selected');
                 });
-
-                // 2. 重置價格按鈕
                 priceButtons.forEach(button => {
                     button.classList.remove('selected');
                 });
-                
                 console.log("分類及價格篩選條件已重置。");
                 renderStoreList(storeData);
             }
+
+            function renderTotalSummary(data) {
+                const total = data.reduce((acc, item) => {
+                    acc.cals += item.cals || 0;
+                    acc.carbs += item.carbs || 0;
+                    acc.protein += item.protein || 0;
+                    acc.fat += item.fat || 0;
+                    acc.sugar += item.sugar || 0;
+                    acc.sodium += item.sodium || 0;
+                    return acc;
+                }, { cals: 0, carbs: 0, protein: 0, fat: 0, sugar: 0, sodium: 0 });
+
+                totalSummaryValues.innerHTML = `
+                    <div class="summary-value"><p>${total.cals}</p><p>大卡</p></div>
+                    <div class="summary-value"><p>${total.carbs}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.protein}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.fat}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.sugar}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.sodium}</p><p>毫克</p></div>
+                `;
+                
+                mealButtons.forEach(btn => {
+                    const mealType = btn.getAttribute('data-meal');
+                    const mealCals = data
+                        .filter(item => item.meal === mealType)
+                        .reduce((sum, item) => sum + (item.cals || 0), 0);
+                    btn.querySelector('.meal-cal-summary').textContent = `已攝取：約 ${mealCals} 大卡`;
+                });
+            }
             
-            resetFiltersButton.addEventListener('click', resetAllFilters);
+            function renderMealDetails(mealType, data) {
+                const mealItems = data.filter(item => item.meal === mealType);
+                
+                const total = mealItems.reduce((acc, item) => {
+                    acc.cals += item.cals || 0;
+                    acc.carbs += item.carbs || 0;
+                    acc.protein += item.protein || 0;
+                    acc.fat += item.fat || 0;
+                    acc.sugar += item.sugar || 0;
+                    acc.sodium += item.sodium || 0;
+                    return acc;
+                }, { cals: 0, carbs: 0, protein: 0, fat: 0, sugar: 0, sodium: 0 });
+
+                mealSummaryTitle.textContent = getMealName(mealType) + ' 攝取量'; // 顯示中文名稱
+                mealSummaryValues.innerHTML = `
+                    <div class="summary-value"><p>${total.cals}</p><p>大卡</p></div>
+                    <div class="summary-value"><p>${total.carbs}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.protein}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.fat}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.sugar}</p><p>公克</p></div>
+                    <div class="summary-value"><p>${total.sodium}</p><p>毫克</p></div>
+                `;
+
+                if (mealItems.length === 0) {
+                     mealFoodList.innerHTML = '<p style="text-align: center; color: #999;">尚未新增資料</p>';
+                } else {
+                    mealFoodList.innerHTML = mealItems.map(item => `
+                        <div class="food-entry">
+                            <div class="entry-title">${item.name}</div>
+                            <div class="entry-nutrients">
+                                <div class="entry-nutrient"><p>${item.cals}</p><p>大卡</p></div>
+                                <div class="entry-nutrient"><p>${item.carbs}</p><p>公克</p></div>
+                                <div class="entry-nutrient"><p>${item.protein}</p><p>公克</p></div>
+                                <div class="entry-nutrient"><p>${item.fat}</p><p>公克</p></div>
+                                <div class="entry-nutrient"><p>${item.sugar}</p><p>公克</p></div>
+                                <div class="entry-nutrient"><p>${item.sodium}</p><p>毫克</p></div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+            
+            function getMealName(type) {
+                switch(type) {
+                    case 'breakfast': return '早餐';
+                    case 'lunch': return '午餐';
+                    case 'dinner': return '晚餐';
+                    case 'other': return '其他';
+                    default: return type;
+                }
+            }
+
+            function resetMealView() {
+                totalSummaryContainer.style.display = 'block';
+                mealDetailContainer.style.display = 'none';
+                document.getElementById('diet-form').style.display = 'none'; // 隱藏輸入表單
+                mealButtons.forEach(btn => btn.classList.remove('selected'));
+                renderTotalSummary(dailyDietData); // 確保每次重置都更新總計
+            }
+
+            // --- 儲存功能 ---
+            saveDietBtn.addEventListener('click', () => {
+                // 找出當前選中的餐次
+                const selectedBtn = document.querySelector('.meal-card-btn.selected');
+                if (!selectedBtn) {
+                    alert('請先選擇一個餐次！');
+                    return;
+                }
+                const mealType = selectedBtn.getAttribute('data-meal');
+                
+                // 獲取輸入值
+                const name = inputName.value.trim();
+                const cals = parseInt(inputCals.value) || 0;
+                const carbs = parseInt(inputCarbs.value) || 0;
+                const protein = parseInt(inputProtein.value) || 0;
+                const fat = parseInt(inputFat.value) || 0;
+                const sugar = parseInt(inputSugar.value) || 0;
+                const sodium = parseInt(inputSodium.value) || 0;
+                
+                if (!name) {
+                    alert('請輸入食物名稱！');
+                    return;
+                }
+
+                // 建立新資料
+                const newItem = {
+                    id: Date.now(), // 簡單的唯一 ID
+                    meal: mealType,
+                    name: name,
+                    cals: cals,
+                    carbs: carbs,
+                    protein: protein,
+                    fat: fat,
+                    sugar: sugar,
+                    sodium: sodium
+                };
+                
+                // 加入陣列
+                dailyDietData.push(newItem);
+                
+                // 清空輸入框
+                inputName.value = '';
+                inputCals.value = '';
+                inputCarbs.value = '';
+                inputProtein.value = '';
+                inputFat.value = '';
+                inputSugar.value = '';
+                inputSodium.value = '';
+                
+                // 更新畫面 (總計 + 單餐詳情)
+                renderTotalSummary(dailyDietData);
+                renderMealDetails(mealType, dailyDietData);
+                
+                console.log('已儲存:', newItem);
+            });
 
 
-            // --- 搜尋頁面功能 ---
+            function handleDayClick() {
+                document.querySelectorAll('#calendar-grid .cal-day').forEach(day => day.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const selectedDateStr = this.getAttribute('data-date');
+                selectedDate = parseInt(this.textContent);
+                console.log(`日期 ${selectedDateStr} 被選中。`);
+                resetMealView(); 
+            }
 
-            // 1. 渲染店家列表
+            function handleMealClick() {
+                const mealType = this.getAttribute('data-meal');
+                const isSelected = this.classList.contains('selected');
+
+                mealButtons.forEach(btn => btn.classList.remove('selected'));
+                
+                if (!isSelected) {
+                    this.classList.add('selected');
+                    totalSummaryContainer.style.display = 'none';
+                    mealDetailContainer.style.display = 'block';
+                    document.getElementById('diet-form').style.display = 'block';
+
+                    renderMealDetails(mealType, dailyDietData);
+                    console.log(`正在查看 ${mealType} 詳情。`);
+                } else {
+                    resetMealView();
+                    console.log(`返回總累積攝取視圖。`);
+                }
+            }
+
+
+            function renderCalendar(date) {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                const currentMonthIndex = now.getMonth();
+                const todayDate = now.getDate();
+                
+                const year = date.getFullYear();
+                const month = date.getMonth();
+
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+                calendarGrid.innerHTML = `
+                    <span class="cal-weekday">Su</span>
+                    <span class="cal-weekday">Mo</span>
+                    <span class="cal-weekday">Tu</span>
+                    <span class="cal-weekday">We</span>
+                    <span class="cal-weekday">Th</span>
+                    <span class="cal-weekday">Fr</span>
+                    <span class="cal-weekday">Sa</span>
+                `;
+
+                for (let i = firstDayOfMonth; i > 0; i--) {
+                    const day = daysInPrevMonth - i + 1;
+                    const dayElement = document.createElement('span');
+                    dayElement.classList.add('cal-day', 'not-in-month');
+                    dayElement.textContent = day;
+                    calendarGrid.appendChild(dayElement);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateString = `${monthNames[month]} ${day}, ${year}`;
+                    const dayElement = document.createElement('span');
+                    dayElement.classList.add('cal-day', 'in-month');
+                    dayElement.textContent = day;
+                    dayElement.setAttribute('data-date', dateString);
+                    
+                    const isToday = year === currentYear && month === currentMonthIndex && day === todayDate;
+                    
+                    if (isToday) {
+                        dayElement.classList.add('selected');
+                    } else if (day === selectedDate && year === currentMonth.getFullYear() && month === currentMonth.getMonth()) {
+                         dayElement.classList.add('selected');
+                    }
+                    
+                    dayElement.addEventListener('click', handleDayClick);
+                    calendarGrid.appendChild(dayElement);
+                }
+
+                const totalCells = firstDayOfMonth + daysInMonth;
+                const cellsNeeded = 42; 
+                let nextDay = 1;
+
+                for (let i = totalCells; i < cellsNeeded; i++) {
+                    const dayElement = document.createElement('span');
+                    dayElement.classList.add('cal-day', 'not-in-month');
+                    dayElement.textContent = nextDay++;
+                    calendarGrid.appendChild(dayElement);
+                }
+            }
+
+            function changeMonth(delta) {
+                currentMonth.setDate(1); 
+                currentMonth.setMonth(currentMonth.getMonth() + delta);
+                currentMonth.setDate(Math.min(selectedDate, new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate()));
+                renderCalendar(currentMonth);
+            }
+            
             function renderStoreList(stores) {
+                // Ensure storeListContainer exists before trying to access innerHTML
+                if (!storeListContainer) {
+                    console.error("Store list container not found!");
+                    return;
+                }
+                
                 storeListContainer.innerHTML = '';
                 stores.forEach(store => {
                     const card = document.createElement('a');
@@ -803,13 +1212,11 @@
                     storeListContainer.appendChild(card);
                 });
                 
-                // 重新綁定店家卡片點擊事件 (因為 DOM 已經改變)
                 document.querySelectorAll('.store-link').forEach(link => {
                     link.addEventListener('click', handleStoreLinkClick);
                 });
             }
 
-            // 2. 處理店家卡片點擊事件 (Frame 1 -> Frame 2)
             function handleStoreLinkClick(e) {
                 e.preventDefault();
                 const storeId = parseInt(this.getAttribute('data-store-id'));
@@ -817,9 +1224,7 @@
             }
 
 
-            // 3. 渲染店家詳情頁 (Frame 2)
             function renderStoreDetail(store) {
-                // 填充基本資訊
                 document.getElementById('detail-hero-img').src = store.heroImg;
                 document.getElementById('detail-hero-img').alt = store.name;
                 document.getElementById('detail-description').textContent = store.description;
@@ -832,7 +1237,6 @@
                 document.getElementById('detail-distance').textContent = store.distance;
                 document.getElementById('detail-address').textContent = store.address;
 
-                // 填充菜單預覽
                 const menuContainer = document.getElementById('detail-menu-cards');
                 menuContainer.innerHTML = '';
 
@@ -848,7 +1252,6 @@
                     menuContainer.appendChild(menuCard);
                 });
                 
-                // 設置愛心圖標的初始狀態
                 const isFavorited = favorites.includes(store.id);
                 if (followIcon) {
                     if (isFavorited) {
@@ -861,7 +1264,6 @@
                 }
             }
 
-            // 4. 渲染收藏列表 (Frame 4)
             function renderFavorites() {
                 const container = document.getElementById('favorite-list-container');
                 const filteredStores = storeData.filter(store => favorites.includes(store.id));
@@ -892,7 +1294,15 @@
             }
 
 
-            // --- 互動功能 ---
+            // --- 執行初始化和事件綁定 ---
+
+            // 初始載入和綁定
+            prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+            nextMonthBtn.addEventListener('click', () => changeMonth(1));
+            mealButtons.forEach(button => {
+                button.addEventListener('click', handleMealClick);
+            });
+            resetFiltersButton.addEventListener('click', resetAllFilters);
 
             // 導覽列點擊事件
             navLinks.forEach(link => {
@@ -910,13 +1320,11 @@
                     if (currentStoreId === null) return; // 確保有店家 ID
 
                     if (followIcon.classList.contains('fa-regular')) {
-                        // 空心 -> 實心 (收藏)
                         favorites.push(currentStoreId);
                         followIcon.classList.remove('fa-regular');
                         followIcon.classList.add('fa-solid', 'followed');
                         console.log(`店家 ${currentStoreId} 已收藏。當前收藏:`, favorites);
                     } else {
-                        // 實心 -> 空心 (取消收藏)
                         favorites = favorites.filter(id => id !== currentStoreId);
                         followIcon.classList.remove('fa-solid', 'followed');
                         followIcon.classList.add('fa-regular');
@@ -924,7 +1332,6 @@
                     }
                 });
             }
-
 
             // 類別按鈕點擊事件 (多選切換)
             categoryButtons.forEach(button => {
@@ -948,6 +1355,15 @@
                     }
                 });
             });
+
+
+            // --- 啟動初始化 ---
+
+            // 修正: 確保所有初始化相關函式在 DOMContentLoaded 綁定後被調用
+            setActivePage('search-page', 'nav-search'); 
+            renderTotalSummary(dailyDietData); 
+            renderStoreList(storeData); // 這裡被補上了
+            mealDetailContainer.style.display = 'none'; 
         });
 
         // 飲食輸入表單切換邏輯 (Frame 3/5)
