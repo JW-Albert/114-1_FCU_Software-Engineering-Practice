@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS restaurants (
     averageRating    FLOAT DEFAULT 0,
     priceRange       TINYINT,           -- 1 平價, 2 中等, 3 高檔
     foodType         VARCHAR(50),       -- 日式、義式...
-    vegetarianOption ENUM('VEGAN', 'LACTO_OVO', 'NON_VEG')
+    vegetarianOption ENUM('全素', '蛋奶素', '葷食')
 ) ENGINE=InnoDB;
 
 -- 建立餐點資料表
