@@ -69,15 +69,18 @@ def init_tables():
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
         
-        # 建立 users 資料表
+        # 建立 users 資料表（與 SQL 檔案結構一致）
         create_users_table = """
         CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(50) NOT NULL UNIQUE,
-            password_hash VARCHAR(255) NOT NULL,
-            email VARCHAR(100),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            userID          INT AUTO_INCREMENT PRIMARY KEY,
+            username        VARCHAR(50) NOT NULL UNIQUE,
+            hashedPassword  VARCHAR(255) NOT NULL,
+            mode            ENUM('NORMAL', 'FITNESS') DEFAULT 'NORMAL',
+            budget          DECIMAL(8,2) DEFAULT 0,
+            targetCalories  INT,
+            targetProtein   FLOAT,
+            targetFat       FLOAT,
+            created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
             INDEX idx_username (username)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         """
@@ -126,8 +129,8 @@ def create_default_user():
         password_hash = generate_password_hash(default_password)
         
         cursor.execute(
-            "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)",
-            (default_username, password_hash, default_email)
+            "INSERT INTO users (username, hashedPassword) VALUES (?, ?)",
+            (default_username, password_hash)
         )
         
         conn.commit()

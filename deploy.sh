@@ -6,6 +6,8 @@
 
 clear
 
+rm -rf venv
+
 echo "Creating virtual environment..."
 python3 -m venv venv
 echo "================================================"
